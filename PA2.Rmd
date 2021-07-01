@@ -1,0 +1,140 @@
+---
+title: 'Participation Assignment #2'
+author: 'Andrew Nalundasan'
+Date: 'MM/DD/YYYY'
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+---
+
+```{r echo=FALSE}
+# Course: OMSBA 5210, Seattle University
+# Purpose: Participation Assignment #2
+# Date: 6/29/2021
+# Author: Andrew Nalundasan
+```
+
+```{r message=FALSE}
+# Load libraries and packages
+library(tidyverse)
+library(ggplot2)    
+library(gridExtra)    # combine graphs into same frame
+library(scales)    # to get $ and , on axis in graph
+```
+
+# Load and transform data
+
+```{r}
+# Load data
+oj <- read_csv("OJ_data.csv")
+
+```
+
+# Plot a histogram
+
+```{r}
+hist <- ggplot(data = oj, mapping = aes(x=PriceMM))
+```
+
+## Basic histogram
+```{r}
+hist + geom_histogram()
+```
+
+## Filled histogram
+```{r}
+hist + geom_histogram(mapping = aes(fill=Purchase))    # 'Purchase' variable fills in the bars
+```
+
+## Histogram - Density
+```{r}
+hist + geom_density(mapping = aes(fill=Purchase), alpha = 0.5)    # alpha to add transparency
+```
+
+# Plot a boxplot
+
+```{r}
+bp <- ggplot(data = oj, mapping = aes(x=0))
+bp + geom_boxplot(mapping = aes(y=PriceMM))    # Median is ~2.1 First quartile ~ 2.0. Third quartile ~ 2.2
+```
+
+## Flipped boxplot
+```{r}
+bp + geom_boxplot(mapping = aes(y=PriceMM)) + 
+  coord_flip() +    # flip coords to make horizontal
+  theme_classic()  
+```
+
+
+# Bar graphs
+
+```{r}
+# reset original frame to set gender for bar graph
+bar <- ggplot(data = oj, mapping = aes(x=STORE))
+
+```
+
+## Classic bar geom
+```{r}
+# classic bar geom
+bar + geom_bar()
+```
+
+
+## Stacked bar graph and counts
+```{r}
+# stacked bar graph counts
+bar <- ggplot(data = oj, mapping = aes(x=STORE, fill=Purchase))
+bar + geom_bar()
+```
+
+## Proportional stacked bar graph
+```{r}
+
+# use position="fill" to get stacked bar graphs
+bar + geom_bar(position="fill")
+```
+
+## Clustered bar graph of counts
+```{r}
+# show count level AND balance
+# position = "dodge" gets clustered bar graph
+bar + geom_bar(position = "dodge")
+```
+
+
+# Additional formatting
+```{r}
+pa2 <- ggplot(data = oj, mapping = aes(x = STORE, y = SpecialMM, fill = Purchase)) + 
+  geom_bar(position="dodge", stat = "summary") + 
+  labs(x = "Store",
+       y = "Special on MM", 
+       title = "Minute Maid sells more than Citrus Hill when on special",
+       subtitle = "Minute Maid sales when on special compared to Citrus Hill") + 
+  scale_y_continuous(labels = dollar) + 
+  theme_classic() + 
+  coord_flip() + 
+  scale_fill_manual(values = c("dark orange", "chartreuse4"),    # going for an OJ theme here
+                    guide = guide_legend(reverse = TRUE))
+
+
+# show graph
+pa2
+
+```
+
+This graph indicates than when Minute Maid (MM) is on special, MM experiences a higher number of purchases over Citrus Hill (CH), MM's main competitor. When MM is running a 40 cent discount, sales at Store 1 skyrocket compared to CH sales. Discounts of ~5 cents do not make much of a difference in sales for either brand as shown by Store 3. 
+
+
+## Save graph for memo
+```{r}
+# save previous graph to use in memo
+ggsave(filename = "pa2.png", plot = pa2)
+```
+
+
+
+
