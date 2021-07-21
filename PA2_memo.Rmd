@@ -21,6 +21,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 # Purpose: Participation Assignment #2
 # Date: 7/1/2021
 # Author: Andrew Nalundasan
+# Pushing commits: 7/21/2021
 ```
 
 ```{r}
